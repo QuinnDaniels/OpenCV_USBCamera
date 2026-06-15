@@ -11,9 +11,18 @@ using namespace chrono;
 
 int main(int argc, char** argv)
 {
+    // CLI overrides: <img_save_dir> <capture_device_path>
+    string dir = argv[1];
+    string devicePath = "/dev/video1";
+    if (argc >= 3) {
+        devicePath = string(argv[2]);
+    }
+    cout << "device listed: " << devicePath << endl;
+
+    
     //read video
     cv::VideoCapture capture;
-    capture.open("/dev/video1");
+    capture.open(devicePath);
     capture.set(cv::CAP_PROP_FRAME_WIDTH, 640);
     capture.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
 
@@ -28,7 +37,7 @@ int main(int argc, char** argv)
 
     Mat frame;
     
-    string dir = argv[1];
+    
     int index = 0;
     while (true)
     {
