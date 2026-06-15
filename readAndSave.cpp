@@ -21,8 +21,12 @@ int main(int argc, char** argv)
 
     
     //read video
-    cv::VideoCapture capture;
+    cv::VideoCapture capture(0);
     capture.open(devicePath);
+    if (!capture.isOpened()) { //check if video device has been initialised
+        cerr << "Error: cannot open camera" << endl;
+        return -1;
+    }
     capture.set(cv::CAP_PROP_FRAME_WIDTH, 640);
     capture.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
 
@@ -31,9 +35,6 @@ int main(int argc, char** argv)
 
     cout << "camera width = " << dWidth << ", height = " << dHeight << endl;
 
-    if (!capture.isOpened()) { //check if video device has been initialised
-        cout << "cannot open camera";
-    }
 
     Mat frame;
     
