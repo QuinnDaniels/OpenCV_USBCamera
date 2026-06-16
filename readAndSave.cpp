@@ -40,33 +40,50 @@ int main(int argc, char** argv)
     
     
     int index = 0;
-    while (true)
+    bool endloop = false;
+    int looper = 0;
+    int failooper = 0;
+    while (!endloop)
     {
+        
         bool bSuccess = capture.read(frame); // read a new frame from video 
 
         //Breaking the while loop if the frames cannot be captured
         if (bSuccess == false) 
         {
-            cout << "Video camera is disconnected" << endl;
-            cin.get(); //Wait for any key press
-            break;
+            cout << "Loop: " << looper << endl;
+            failooper++;
+            cout << "!!Loop Failed: " << failooper << endl;
+            cerr << "Video camera is disconnected" << endl;
+            //cin.get(); //Wait for any key press
+            if (failooper >= 4)
+            {
+                cerr << "4 failures in a row! Ending loop...." << endl;
+                endloop = true;
+                break;
+            }
         }
-
-        //show the frame in the created window
-        imshow("video", frame);
-
-        string path = dir + std::to_string(index) + ".jpg";
-        imwrite(path, frame);
-        index ++;
-
-        //wait for for 10 ms until any key is pressed.  
-        //If the 'Esc' key is pressed, break the while loop.
-        //If the any other key is pressed, continue the loop 
-        //If any key is not pressed withing 10 ms, continue the loop 
-        if (waitKey(10) == 27)
+        else
         {
-            cout << "Esc key is pressed by user. Stoppig the video" << endl;
-            break;
+            failooper = 0;
+            //show the frame in the created window
+            imshow("video", frame);
+
+            string path = dir + std::to_string(index) + ".jpg";
+            imwrite(path, frame);
+            index ++;
+
+            looper++;
+            //wait for for 10 ms until any key is pressed.  
+            //If the 'Esc' key is pressed, break the while loop.
+            //If the any other key is pressed, continue the loop 
+            //If any key is not pressed withing 10 ms, continue the loop 
+            if (waitKey(10) == 27)
+            {
+                cout << "Esc key is pressed by user. Stoppig the video" << endl;
+                endloop = true;
+                break;
+            }
         }
     }
 
